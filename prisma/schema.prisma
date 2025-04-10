@@ -15,7 +15,7 @@ datasource db {
 
 model Session {
   id            String    @id
-  shop          String
+  shop          String 	  @unique
   state         String
   isOnline      Boolean   @default(false)
   scope         String?
@@ -29,4 +29,18 @@ model Session {
   locale        String?
   collaborator  Boolean?  @default(false)
   emailVerified Boolean?  @default(false)
+
+  settings Settings[] // Relation back to AppSetting
+}
+
+model Settings {
+	id          Int      @id @default(autoincrement())
+	shop 		String
+	name 		String
+	description String?
+	createdAt 	DateTime @default(now())
+	updatedAt 	DateTime @updatedAt
+
+	session     Session  @relation(fields: [shop], references: [shop])
+	
 }

@@ -3,7 +3,7 @@
 client_id = "9684ca4f21f70a0c93795a0ddbeb5404"
 name = "happy-wishlist"
 handle = "happy-wishlist"
-application_url = "https://valued-xi-flying-simpsons.trycloudflare.com"
+application_url = "https://degree-review-argument-imperial.trycloudflare.com"
 embedded = true
 
 [build]
@@ -27,9 +27,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://valued-xi-flying-simpsons.trycloudflare.com/auth/callback",
-  "https://valued-xi-flying-simpsons.trycloudflare.com/auth/shopify/callback",
-  "https://valued-xi-flying-simpsons.trycloudflare.com/api/auth/callback"
+  "https://degree-review-argument-imperial.trycloudflare.com/auth/callback",
+  "https://degree-review-argument-imperial.trycloudflare.com/auth/shopify/callback",
+  "https://degree-review-argument-imperial.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

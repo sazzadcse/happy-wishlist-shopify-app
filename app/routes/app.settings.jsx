@@ -17,17 +17,33 @@ import { TitleBar } from "@shopify/app-bridge-react";
 import { useState } from "react";
 import { json } from "@remix-run/node";
 import { useLoaderData, Form } from "@remix-run/react";
+import { authenticate } from "../shopify.server";
 
-export async function loader () {
-	// get the settings from the database
-	// const settings = await getSettingsFromDatabase();
+// Import db client from the database module
+import db from "../db.server"
+
+
+export const loader = async ({ request, params }) => {
+	const { session } = await authenticate.admin(request);
+	const { id } = session;
+
+	console.log("params id :", id);
+
+	const result = await db.Settings.findFirst( {
+		where: {
+			id: id,
+		},
+	} );
+
+	console.log( 'result ---->', result );
+
 	const settings = {
 		name: "Happy Wishlist",
 		description: "A wishlist app for Shopify",
 	};
 
 	return json( { settings } );
-}
+};
 
 export async function action ( { request } ) {
 	const formData = await request.formData();
@@ -71,14 +87,14 @@ export default function SettingsPage () {
 									label="App name"
 									name="name"
 									placeholder="App name"
-									value={formState.name}
+									value={formState?.name}
 									onChange={( value ) => setFormState( { ...formState, name: value } )}
 								/>
 								<TextField
 									label="Description"
 									name="description"
 									placeholder="Description"
-									value={formState.description}
+									value={formState?.description}
 									onChange={( value ) => setFormState( { ...formState, description: value } )}
 								/>
 								<Button submit={true}>Save</Button>
