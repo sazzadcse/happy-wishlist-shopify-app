@@ -20,34 +20,55 @@ import { useLoaderData, Form } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 
 // Import db client from the database module
-import db from "../db.server"
+import db from "../db.server";
 
 
-export const loader = async ({ request, params }) => {
-	const { session } = await authenticate.admin(request);
-	const { id } = session;
+export const loader = async ( { request, params } ) => {
+	const { session } = await authenticate.admin( request );
+	const { shop } = session;
 
-	console.log("params id :", id);
+	console.log( "params id :", shop );
 
-	const result = await db.Settings.findFirst( {
+	const settings = await db.Settings.findFirst( {
 		where: {
-			id: id,
+			shop: shop,
 		},
 	} );
-
-	console.log( 'result ---->', result );
-
-	const settings = {
-		name: "Happy Wishlist",
-		description: "A wishlist app for Shopify",
-	};
 
 	return json( { settings } );
 };
 
 export async function action ( { request } ) {
+	const { session } = await authenticate.admin( request );
+	const { shop } = session;
+
 	const formData = await request.formData();
-	const settings = Object.fromEntries( formData );
+	const data = Object.fromEntries( formData );
+
+	// First try to update existing record
+	const updatedSettings = await db.settings.updateMany( {
+		where: { shop },
+		data: {
+			name: data.name,
+			description: data.description,
+		},
+	} );
+
+	// If no records were updated, create a new one
+	if ( updatedSettings.count === 0 ) {
+		await db.settings.create( {
+			data: {
+				shop,
+				name: data.name,
+				description: data.description,
+			},
+		} );
+	}
+
+	// Return the current settings
+	const settings = await db.settings.findFirst( {
+		where: { shop },
+	} );
 
 	return json( { settings } );
 }

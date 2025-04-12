@@ -2,7 +2,7 @@ import { json } from "@remix-run/node";
 
 export async function loader () {
 
-	return json( { ok: true, message: "Hello Happy Wishlist API." } );
+	return json( { ok: true, message: "Hello Happy Wishlist Get API." } );
 }
 
 export async function action ( { request } ) {
